@@ -1,12 +1,14 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-// Make sure login links to register and dashboard. 
-function Login() {
+// This gives you a matching register page.
+function Register() {
   const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
+    name: '',
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   })
 
   const handleChange = (e) => {
@@ -19,17 +21,31 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    console.log('Login data:', formData)
+    if (formData.password !== formData.confirmPassword) {
+      alert('Passwords do not match')
+      return
+    }
 
-    // later connect this to backend
+    console.log('Register data:', formData)
+
+    // later this will connect to backend
     navigate('/dashboard')
   }
 
   return (
     <div className="page-container">
       <div className="form-box">
-        <h1>Login</h1>
+        <h1>Create Account</h1>
         <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+
           <input
             type="email"
             name="email"
@@ -48,15 +64,24 @@ function Login() {
             required
           />
 
-          <button type="submit">Login</button>
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            required
+          />
+
+          <button type="submit">Register</button>
         </form>
 
         <p>
-          Don’t have an account? <Link to="/register">Register</Link>
+          Already have an account? <Link to="/">Login</Link>
         </p>
       </div>
     </div>
   )
 }
 
-export default Login
+export default Register
