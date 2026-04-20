@@ -1,6 +1,8 @@
+import '../css/Login.css'
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { registerUser } from '../api'
+
 
 function Register() {
   const navigate = useNavigate()
@@ -40,11 +42,14 @@ function Register() {
   }
 
   return (
-    <div className="page-container">
-      <div className="form-box">
-        <h1>Create Account</h1>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <form onSubmit={handleSubmit}>
+    <div className="login-page">
+      <div className="login-card">
+        <h1 className="logo">TaskMaster</h1>
+        <h2>Create Account</h2>
+
+        {error && <p className="error">{error}</p>}
+
+        <form onSubmit={handleSubmit} className="login-form">
           <input
             type="text"
             name="name"
@@ -53,14 +58,16 @@ function Register() {
             onChange={handleChange}
             required
           />
+
           <input
             type="email"
             name="email"
-            placeholder="Email"
+            placeholder="Email address"
             value={formData.email}
             onChange={handleChange}
             required
           />
+
           <input
             type="password"
             name="password"
@@ -69,19 +76,15 @@ function Register() {
             onChange={handleChange}
             required
           />
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-          />
+
           <button type="submit" disabled={loading}>
             {loading ? 'Creating account...' : 'Register'}
           </button>
         </form>
-        <p>Already have an account? <Link to="/">Login</Link></p>
+
+        <p className="register-link">
+          Already have an account? <Link to="/">Login</Link>
+        </p>
       </div>
     </div>
   )
