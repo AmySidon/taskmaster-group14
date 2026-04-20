@@ -1,212 +1,257 @@
-import { useState, useEffect } from 'react'
-import Navbar from '../components/Navbar'
-import TaskCard from '../components/TaskCard'
-import {
-  fetchTasks,
-  createTask,
-  updateTask,
-  updateTaskStatus,
-  deleteTask,
-  fetchProjects,
-  createProject
-} from '../api'
+import { useState, useEffect } from 'react';
+import TaskCard from '../components/TaskCard';
 
 function Dashboard() {
-  const [tasks, setTasks] = useState([])
-  const [projects, setProjects] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const [courses, setCourses] = useState(() => {
+    const savedCourses = localStorage.getItem('courses');
+    return savedCourses
+      ? JSON.parse(savedCourses)
+      : [
+          { id: 1, name: 'CS 4398' }, // Temporary fake data. In the future, this will come from the backend.
+          { id: 2, name: 'CS 4328' }
+        ];
+  });
 
-  const [newTask, setNewTask] = useState({
-    title: '',
-    priority: 'Low',
-    due_date: '',
-    project_id: ''
-  })
+  const [tasks, setTasks] = useState(() => {
+    const savedTasks = localStorage.getItem('tasks');
+    return savedTasks
+      ? JSON.parse(savedTasks)
+      : [
+          {
+            id: 1, // Temporary fake data. In the future, this will come from the backend.
+            title: 'Finish frontend',
+            status: 'Pending',
+            priority: 'High',
+            dueDate: '2026-04-15',
+            courseId: 1
+          },
+          {
+            id: 2,
+            title: 'Create backend routes',
+            status: 'In Progress',
+            priority: 'Medium',
+            dueDate: '2026-04-18',
+            courseId: 1
+          },
+          {
+            id: 3,
+            title: 'Connect database',
+            status: 'Completed',
+            priority: 'Low',
+            dueDate: '2026-04-10',
+            courseId: 2
+          }
+        ];
+  });
 
-  const [filter, setFilter] = useState('All')
-  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCourseId, setSelectedCourseId] = useState(() => {
+    const savedSelectedCourse = localStorage.getItem('selectedCourseId');
+    return savedSelectedCourse ? JSON.parse(savedSelectedCourse) : 1;
+  });
 
-  // Load tasks and projects on mount
+  const [newTaskTitle, setNewTaskTitle] = useState('');
+  const [newTaskPriority, setNewTaskPriority] = useState('Low');
+  const [newTaskDueDate, setNewTaskDueDate] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState('All');
+
+  const [newCourseName, setNewCourseName] = useState('');
+
   useEffect(() => {
-    loadData()
-  }, [])
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }, [tasks]);
 
-  async function loadData() {
-    setLoading(true)
-    try {
-      const [tasksData, projectsData] = await Promise.all([
-        fetchTasks(),
-        fetchProjects()
-      ])
-      setTasks(tasksData)
-      setProjects(projectsData)
-      // Set default project_id if projects exist
-      if (projectsData.length > 0) {
-        setNewTask(prev => ({ ...prev, project_id: projectsData[0].id }))
-      }
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
+  useEffect(() => {
+    localStorage.setItem('courses', JSON.stringify(courses));
+  }, [courses]);
+
+  useEffect(() => {
+    localStorage.setItem('selectedCourseId', JSON.stringify(selectedCourseId));
+  }, [selectedCourseId]);
+
+  const handleAddCourse = () => {
+    if (!newCourseName.trim()) return;
+
+    const newCourse = {
+      id: Date.now(),
+      name: newCourseName.trim()
+    };
+
+    setCourses([...courses, newCourse]);
+    setSelectedCourseId(newCourse.id);
+    setNewCourseName('');
+  };
+
+  const handleAddTask = () => {
+    if (!newTaskTitle.trim() || !newTaskDueDate || !selectedCourseId) return;
+
+    const newTask = {
+      id: Date.now(),
+      title: newTaskTitle.trim(),
+      status: 'Pending',
+      priority: newTaskPriority,
+      dueDate: newTaskDueDate,
+      courseId: selectedCourseId
+    };
+
+    setTasks([...tasks, newTask]);
+    setNewTaskTitle('');
+    setNewTaskPriority('Low');
+    setNewTaskDueDate('');
+  };
+
+  const handleDeleteTask = (taskId) => {
+    setTasks(tasks.filter((task) => task.id !== taskId));
+  };
+
+  const handleStatusChange = (taskId, newStatus) => {
+    setTasks(
+      tasks.map((task) =>
+        task.id === taskId ? { ...task, status: newStatus } : task
+      )
+    );
+  };
+
+  const handleDeleteCourse = (courseId) => {
+    const updatedCourses = courses.filter((course) => course.id !== courseId);
+    const updatedTasks = tasks.filter((task) => task.courseId !== courseId);
+
+    setCourses(updatedCourses);
+    setTasks(updatedTasks);
+
+    if (selectedCourseId === courseId) {
+      setSelectedCourseId(updatedCourses.length > 0 ? updatedCourses[0].id : null);
     }
-  }
+  };
 
-  const handleInputChange = (e) => {
-    setNewTask({ ...newTask, [e.target.name]: e.target.value })
-  }
-
-  const handleAddTask = async (e) => {
-    e.preventDefault()
-    if (!newTask.title.trim()) return
-    try {
-      const task = await createTask({
-        title: newTask.title,
-        priority: newTask.priority,
-        due_date: newTask.due_date || null,
-        project_id: newTask.project_id || null
-      })
-      setTasks([task, ...tasks])
-      setNewTask({ title: '', priority: 'Low', due_date: '', project_id: projects[0]?.id || '' })
-    } catch (err) {
-      alert('Error adding task: ' + err.message)
-    }
-  }
-
-  const handleDeleteTask = async (id) => {
-    try {
-      await deleteTask(id)
-      setTasks(tasks.filter(t => t.id !== id))
-    } catch (err) {
-      alert('Error deleting task: ' + err.message)
-    }
-  }
-
-  const handleEditTask = async (id) => {
-    const newTitle = prompt('Enter the new task title:')
-    if (!newTitle || !newTitle.trim()) return
-    try {
-      const updated = await updateTask(id, { title: newTitle })
-      setTasks(tasks.map(t => t.id === id ? updated : t))
-    } catch (err) {
-      alert('Error editing task: ' + err.message)
-    }
-  }
-
-  const handleStatusChange = async (id, newStatus) => {
-    try {
-      await updateTaskStatus(id, newStatus)
-      setTasks(tasks.map(t => t.id === id ? { ...t, status: newStatus } : t))
-    } catch (err) {
-      alert('Error updating status: ' + err.message)
-    }
-  }
-
-  const handleAddProject = async () => {
-    const name = prompt('Enter project/course name:')
-    if (!name || !name.trim()) return
-    try {
-      const project = await createProject(name)
-      setProjects([...projects, project])
-    } catch (err) {
-      alert('Error creating project: ' + err.message)
-    }
-  }
+  const selectedCourse = courses.find((course) => course.id === selectedCourseId);
 
   const filteredTasks = tasks.filter((task) => {
-    const matchesFilter = filter === 'All' || task.status === filter
-    const matchesSearch =
-      task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (task.project_name || '').toLowerCase().includes(searchTerm.toLowerCase())
-    return matchesFilter && matchesSearch
-  })
+    const matchesCourse = task.courseId === selectedCourseId;
+    const matchesSearch = task.title
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesStatus =
+      filterStatus === 'All' ? true : task.status === filterStatus;
+
+    return matchesCourse && matchesSearch && matchesStatus;
+  });
 
   if (loading) return <div><Navbar /><div className="dashboard-container"><p>Loading...</p></div></div>
 
   return (
-    <div>
-      <Navbar />
-      <div className="dashboard-container">
-        <h1>Dashboard</h1>
-        <p>Welcome to TaskMaster.</p>
+    <div className="dashboard-container">
+      <h1>Dashboard</h1>
+      <p>Welcome to TaskMaster.</p>
 
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+      <div className="course-section">
+        <h2>Courses</h2>
 
-        <form onSubmit={handleAddTask} className="task-form">
+        <div className="add-course">
           <input
             type="text"
-            name="title"
-            placeholder="Enter task"
-            value={newTask.title}
-            onChange={handleInputChange}
+            placeholder="Enter course name"
+            value={newCourseName}
+            onChange={(e) => setNewCourseName(e.target.value)}
           />
-
-          <select name="project_id" value={newTask.project_id} onChange={handleInputChange}>
-            <option value="">No Project</option>
-            {projects.map(p => (
-              <option key={p.id} value={p.id}>{p.name}</option>
-            ))}
-          </select>
-
-          <select name="priority" value={newTask.priority} onChange={handleInputChange}>
-            <option value="Low">Low</option>
-            <option value="Medium">Medium</option>
-            <option value="High">High</option>
-          </select>
-
-          <input
-            type="date"
-            name="due_date"
-            value={newTask.due_date}
-            onChange={handleInputChange}
-          />
-
-          <button type="submit">Add Task</button>
-        </form>
-
-        <button onClick={handleAddProject} style={{ marginBottom: '1rem' }}>
-          + Add Project/Course
-        </button>
-
-        <input
-          type="text"
-          placeholder="Search tasks or projects..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-bar"
-        />
-
-        <div className="filter-buttons">
-          {['All', 'Pending', 'In Progress', 'Completed', 'Archived'].map(f => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              style={{ fontWeight: filter === f ? 'bold' : 'normal' }}
-            >
-              {f}
-            </button>
-          ))}
+          <button onClick={handleAddCourse}>Add Course</button>
         </div>
 
-        <div className="task-list">
-          {filteredTasks.length === 0 && <p>No tasks found.</p>}
-          {filteredTasks.map(task => (
-            <TaskCard
-              key={task.id}
-              title={task.title}
-              status={task.status}
-              priority={task.priority}
-              dueDate={task.due_date}
-              course={task.project_name || 'No Project'}
-              onDelete={() => handleDeleteTask(task.id)}
-              onEdit={() => handleEditTask(task.id)}
-              onStatusChange={(newStatus) => handleStatusChange(task.id, newStatus)}
-            />
+        <div className="course-list">
+          {courses.map((course) => (
+            <div key={course.id} style={{ marginBottom: '10px' }}>
+              <button
+                onClick={() => setSelectedCourseId(course.id)}
+                style={{
+                  fontWeight: selectedCourseId === course.id ? 'bold' : 'normal',
+                  marginRight: '10px'
+                }}
+              >
+                {course.name}
+              </button>
+              <button onClick={() => handleDeleteCourse(course.id)}>Delete</button>
+            </div>
           ))}
         </div>
       </div>
+
+      <hr />
+
+      <div className="task-section">
+        <h2>
+          {selectedCourse ? `${selectedCourse.name} Tasks` : 'No Course Selected'}
+        </h2>
+
+        {selectedCourse && (
+          <>
+            <div className="task-form">
+              <input
+                type="text"
+                placeholder="Enter task"
+                value={newTaskTitle}
+                onChange={(e) => setNewTaskTitle(e.target.value)}
+              />
+
+              <select
+                value={newTaskPriority}
+                onChange={(e) => setNewTaskPriority(e.target.value)}
+              >
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+              </select>
+
+              <input
+                type="date"
+                value={newTaskDueDate}
+                onChange={(e) => setNewTaskDueDate(e.target.value)}
+              />
+
+              <button onClick={handleAddTask}>Add Task</button>
+            </div>
+
+            <div className="search-filter">
+              <input
+                type="text"
+                placeholder="Search tasks"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+
+              <div style={{ marginTop: '10px' }}>
+                <button onClick={() => setFilterStatus('All')}>All</button>
+                <button onClick={() => setFilterStatus('Pending')}>Pending</button>
+                <button onClick={() => setFilterStatus('In Progress')}>
+                  In Progress
+                </button>
+                <button onClick={() => setFilterStatus('Completed')}>
+                  Completed
+                </button>
+                <button onClick={() => setFilterStatus('Archived')}>
+                  Archived
+                </button>
+              </div>
+            </div>
+
+            <div className="task-list">
+              {filteredTasks.length > 0 ? (
+                filteredTasks.map((task) => (
+                  <TaskCard
+                    key={task.id}
+                    task={task}
+                    onDelete={handleDeleteTask}
+                    onStatusChange={handleStatusChange}
+                  />
+                ))
+              ) : (
+                <p>No tasks found for this course.</p>
+              )}
+            </div>
+          </>
+        )}
+      </div>
     </div>
-  )
+  );
 }
 
-export default Dashboard
+export default Dashboard;
