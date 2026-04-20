@@ -1,3 +1,4 @@
+import '../css/Dashboard.css'
 import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import TaskCard from '../components/TaskCard';
@@ -145,9 +146,16 @@ function Dashboard() {
     return matchesProject && matchesSearch && matchesStatus;
   });
 
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter((task) => task.status === 'Completed').length;
+  const inProgressTasks = tasks.filter((task) => task.status === 'In Progress').length;
+  const overdueTasks = tasks.filter(
+    (task) => task.due_date && new Date(task.due_date) < new Date() && task.status !== 'Completed'
+  ).length;
+
   if (loading) {
     return (
-      <div>
+      <div className="dashboard-page">
         <Navbar />
         <div className="dashboard-container">
           <p>Loading...</p>
@@ -157,13 +165,40 @@ function Dashboard() {
   }
 
   return (
-    <div>
+    <div className="dashboard-page">
       <Navbar />
+
       <div className="dashboard-container">
-        <h1>Dashboard</h1>
-        <p>Welcome to TaskMaster.</p>
+        <div className="dashboard-header">
+          <div>
+            <h1>Dashboard</h1>
+            <p>Welcome back to TaskMaster</p>
+          </div>
+        </div>
 
         {error && <p style={{ color: 'red' }}>{error}</p>}
+
+        <div className="summary-cards">
+          <div className="summary-card">
+            <h3>Total Tasks</h3>
+            <p>{totalTasks}</p>
+          </div>
+
+          <div className="summary-card">
+            <h3>Completed</h3>
+            <p>{completedTasks}</p>
+          </div>
+
+          <div className="summary-card">
+            <h3>In Progress</h3>
+            <p>{inProgressTasks}</p>
+          </div>
+
+          <div className="summary-card">
+            <h3>Overdue</h3>
+            <p>{overdueTasks}</p>
+          </div>
+        </div>
 
         <div className="course-section">
           <h2>Courses / Projects</h2>
@@ -199,8 +234,6 @@ function Dashboard() {
             )}
           </div>
         </div>
-
-        <hr />
 
         <div className="task-section">
           <h2>

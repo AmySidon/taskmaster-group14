@@ -1,3 +1,4 @@
+import '../css/Navbar.css'
 import { Link, useNavigate } from 'react-router-dom'
 
 function Navbar() {
@@ -13,7 +14,7 @@ function Navbar() {
 
   return (
     <nav className="navbar">
-      <h2>TaskMaster</h2>
+      <h2 style={{ fontWeight: 'bold' }}>TaskMaster</h2>
       <div className="nav-links">
         {user.username && <span>Hi, {user.username}</span>}
         <Link to="/dashboard">Dashboard</Link>
