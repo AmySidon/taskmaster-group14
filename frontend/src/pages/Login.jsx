@@ -1,3 +1,4 @@
+import '../css/Login.css'
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { loginUser } from '../api'
@@ -29,35 +30,43 @@ function Login() {
   }
 
   return (
-    <div className="page-container">
-      <div className="form-box">
-        <h1>Login</h1>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <form onSubmit={handleSubmit}>
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-          <button type="submit" disabled={loading}>
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
-        <p>Don't have an account? <Link to="/register">Register</Link></p>
-      </div>
+  <div className="login-page">
+    <div className="login-card">
+      <h1 className="logo">TaskMaster</h1>
+      <h2>Welcome Back</h2>
+
+      {error && <p className="error">{error}</p>}
+
+      <form onSubmit={handleSubmit} className="login-form">
+        <input
+          type="email"
+          name="email"
+          placeholder="Email address"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
+
+        <button type="submit" disabled={loading}>
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
+      </form>
+
+      <p className="register-link">
+        Don’t have an account? <Link to="/register">Register</Link>
+      </p>
     </div>
-  )
+  </div>
+)
 }
 
 export default Login
