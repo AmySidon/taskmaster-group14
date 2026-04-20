@@ -1,34 +1,38 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-// Make sure login links to register and dashboard. 
+import { loginUser } from '../api'
+
 function Login() {
   const navigate = useNavigate()
-
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  })
+  const [formData, setFormData] = useState({ email: '', password: '' })
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
+    setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-
-    console.log('Login data:', formData)
-
-    // later connect this to backend
-    navigate('/dashboard')
+    setError('')
+    setLoading(true)
+    try {
+      const data = await loginUser(formData.email, formData.password)
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('user', JSON.stringify(data.user))
+      navigate('/dashboard')
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <div className="page-container">
       <div className="form-box">
         <h1>Login</h1>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         <form onSubmit={handleSubmit}>
           <input
             type="email"
@@ -38,7 +42,6 @@ function Login() {
             onChange={handleChange}
             required
           />
-
           <input
             type="password"
             name="password"
@@ -47,13 +50,11 @@ function Login() {
             onChange={handleChange}
             required
           />
-
-          <button type="submit">Login</button>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
         </form>
-
-        <p>
-          Don’t have an account? <Link to="/register">Register</Link>
-        </p>
+        <p>Don't have an account? <Link to="/register">Register</Link></p>
       </div>
     </div>
   )

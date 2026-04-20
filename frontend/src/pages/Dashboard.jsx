@@ -137,6 +137,8 @@ function Dashboard() {
     return matchesCourse && matchesSearch && matchesStatus;
   });
 
+  if (loading) return <div><Navbar /><div className="dashboard-container"><p>Loading...</p></div></div>
+
   return (
     <div className="dashboard-container">
       <h1>Dashboard</h1>
