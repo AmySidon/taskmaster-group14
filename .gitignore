@@ -138,3 +138,13 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# Database
+*.db
+
+# Virtual environment
+venv/
