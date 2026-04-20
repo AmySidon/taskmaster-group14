@@ -1,6 +1,5 @@
-# taskmaster-group14
-CS 4398 Task Manager Project
 # TaskMaster – Task Management System
+CS 4398 Software Engineering Project
 
 TaskMaster is a web-based task management application designed to help students organize assignments, track deadlines, and manage academic projects efficiently. The system allows users to create projects (courses), manage tasks, set priorities, and monitor progress in one centralized platform.
 
@@ -30,7 +29,6 @@ TaskMaster is a web-based task management application designed to help students 
 ---
 
 ## Project Structure
-
 taskmaster-group14/
 │
 ├── frontend/ # React application (UI)
@@ -54,23 +52,27 @@ cd taskmaster-group14
 ---
 
 ### 2. Backend Setup (Flask)
-cd backend
-pip install -r requirements.txt
-python app.py
+    cd backend
 
-The backend should now be running at:
-http://localhost:5000
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    flask run --port=5001
 
+    The backend should now be running at: 
+    http://localhost:5001
+    > **Note:** On macOS, port 5000 may already be in use (e.g., by AirPlay Receiver).  
+>   If so, the backend is configured to run on port 5001.
 ---
 
 ### 3. Frontend Setup (React)
-cd frontend
-npm install
-npm run dev
+    cd frontend
+    npm install
+    npm run dev
 
 
-The frontend should now be running at:
-http://localhost:5173
+    The frontend should now be running at:
+    http://localhost:5173
 
 ---
 
