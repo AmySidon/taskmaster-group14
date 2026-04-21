@@ -36,9 +36,3 @@ classDiagram
 
     Student "1" --> "0..*" Course : enrolled_in
     Course "1" *-- "0..*" Task : has_assignments
-
-
-
-    Completed --> In_Progress : Re-open (Needs Revision)
-    
-    Archived --> [*] : Permanently Deleted
