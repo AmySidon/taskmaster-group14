@@ -36,3 +36,19 @@ classDiagram
 
     Student "1" --> "0..*" Course : enrolled_in
     Course "1" *-- "0..*" Task : has_assignments
+
+
+
+stateDiagram-v2
+    [*] --> Pending : Task Created
+    
+    Pending --> In_Progress : Start Working
+    Pending --> Archived : Remove/Delete
+    
+    In_Progress --> Completed : Submit/Finish
+    In_Progress --> Pending : Pause Task
+    
+    Completed --> Archived : Cleanup
+    Completed --> In_Progress : Re-open (Needs Revision)
+    
+    Archived --> [*] : Permanently Deleted
