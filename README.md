@@ -62,7 +62,8 @@ taskmaster-group14/
 │       ├── css/
 │       │   ├── Dashboard.css
 │       │   ├── Login.css
-│       │   └── Navbar.css
+│       │   ├── Navbar.css
+        │   └── Task.css
 │       └── services/
 │
 ├── docs/
