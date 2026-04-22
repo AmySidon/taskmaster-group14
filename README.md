@@ -33,20 +33,43 @@ TaskMaster is a web-based task management application designed to help students 
 taskmaster-group14/
 ├── backend/
 │   ├── app.py
-│   ├── routes/
-│   ├── models/
-│   └── requirements.txt
+│   ├── database.py
+│   ├── helpers.py
+│   ├── taskmaster.db
+│   ├── requirements.txt
+│   └── routes/
+│
 ├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── App.jsx
-│   │   └── main.jsx
+│   ├── index.html
 │   ├── package.json
-│   └── vite.config.js
-├── database/
+│   ├── package-lock.json
+│   ├── vite.config.js
+│   ├── public/
+│   └── src/
+│       ├── App.jsx
+│       ├── App.css
+│       ├── main.jsx
+│       ├── api.js
+│       ├── assets/
+│       ├── components/
+│       │   ├── Navbar.jsx
+│       │   ├── Sidebar.jsx
+│       │   └── TaskCard.jsx
+│       ├── pages/
+│       │   ├── Dashboard.jsx
+│       │   ├── Login.jsx
+│       │   └── Register.jsx
+│       ├── css/
+│       │   ├── Dashboard.css
+│       │   ├── Login.css
+│       │   └── Navbar.css
+│       └── services/
+│
 ├── docs/
-├── tests/
+│   ├── class_diagram.md
+│   ├── sequence_diagram.md
+│   └── statechart_diagram.md
+│
 ├── prompts/
 │   ├── 01_project_setup.md
 │   ├── 02_uml_skeleton.md
@@ -61,8 +84,11 @@ taskmaster-group14/
 │   ├── 11_backend_tests.md
 │   ├── 12_frontend_scaffold.md
 │   └── 13_dashboard_ui.md
+│
+├── tests/
+│   └── test_tasks.py
+│
 ├── README.md
-└── .gitignore
 ```
 ---
 
