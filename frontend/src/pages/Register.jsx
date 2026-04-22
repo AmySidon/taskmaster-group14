@@ -76,6 +76,14 @@ function Register() {
             onChange={handleChange}
             required
           />
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            required
+          />
 
           <button type="submit" disabled={loading}>
             {loading ? 'Creating account...' : 'Register'}
