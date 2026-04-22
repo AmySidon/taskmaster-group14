@@ -307,8 +307,13 @@ function Dashboard() {
 
                     return (
                       <TaskCard
-                        key={task.id}
-                        task={mappedTask}
+                        key={mappedTask.id}
+                        id={mappedTask.id}
+                        title={mappedTask.title}
+                        status={mappedTask.status}
+                        priority={mappedTask.priority}
+                        dueDate={mappedTask.dueDate}
+                        projectName={mappedTask.courseName}
                         onDelete={handleDeleteTask}
                         onStatusChange={handleStatusChange}
                         onEdit={handleEditTask}

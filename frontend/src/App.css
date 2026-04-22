@@ -74,23 +74,6 @@ body {
   padding: 2rem;
 }
 
-.task-list {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-top: 1rem;
-}
-
-.task-card {
-  background: white;
-  padding: 1rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  transition: transform 0.2s;
-}
-.task-card:hover {
-  transform: translateY(-3px);
-}
 .task-form {
   display: flex;
   gap: 10px;
@@ -113,13 +96,6 @@ body {
   background-color: #007bff;
   color: white;
   cursor: pointer;
-}
-
-.task-card button {
-  margin-top: 10px;
-}
-.task-card.completed {
-  opacity: 0.6;
 }
 
 /* Filter Buttons for Dashboard*/
@@ -159,9 +135,7 @@ select {
   border: 1px solid #ccc;
 }
 
-.task-card p {
-  margin: 5px 0;
-}
+
 .search-bar {
   width: 100%;
   max-width: 400px;
