@@ -29,17 +29,41 @@ TaskMaster is a web-based task management application designed to help students 
 ---
 
 ## Project Structure
+```bash
 taskmaster-group14/
-│
-├── frontend/ # React application (UI)
-├── backend/ # Flask API and server logic
-├── database/ # SQL schema and data setup
-├── docs/ # diagrams, screenshots, testcases
-├── tests/ # unit tests
-│
+├── backend/
+│   ├── app.py
+│   ├── routes/
+│   ├── models/
+│   └── requirements.txt
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── package.json
+│   └── vite.config.js
+├── database/
+├── docs/
+├── tests/
+├── prompts/
+│   ├── 01_project_setup.md
+│   ├── 02_uml_skeleton.md
+│   ├── 03_user_model_entity.md
+│   ├── 04_course_model_entity.md
+│   ├── 05_task_model_entity.md
+│   ├── 06_task_repository.md
+│   ├── 07_task_service_create_get.md
+│   ├── 08_task_controller_post_get.md
+│   ├── 09_task_service_update_delete.md
+│   ├── 10_task_controller_put_delete.md
+│   ├── 11_backend_tests.md
+│   ├── 12_frontend_scaffold.md
+│   └── 13_dashboard_ui.md
 ├── README.md
 └── .gitignore
-
+```
 ---
 
 ## Setup Instructions
