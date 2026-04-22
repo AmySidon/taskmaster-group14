@@ -1,0 +1,27 @@
+.task-card {
+  background: white;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+.task-card:hover {
+  transform: translateY(-3px);
+}
+
+.task-card button {
+  margin-top: 10px;
+}
+.task-card.completed {
+  opacity: 0.6;
+}
+.task-card p {
+  margin: 5px 0;
+}
+
+.task-card h3 {
+  color: #222;
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+  word-break: break-word;
+}

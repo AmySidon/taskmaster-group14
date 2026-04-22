@@ -1,3 +1,5 @@
+import '../css/Task.css'
+
 function TaskCard({
   title,
   status,
