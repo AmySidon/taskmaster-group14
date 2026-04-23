@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
+import './css/App.css'
 //Move between Login, Register, and Dashboard.
 function App() {
   return (
