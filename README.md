@@ -47,7 +47,6 @@ taskmaster-group14/
 │   ├── public/
 │   └── src/
 │       ├── App.jsx
-│       ├── App.css
 │       ├── main.jsx
 │       ├── api.js
 │       ├── assets/
@@ -63,7 +62,8 @@ taskmaster-group14/
 │       │   ├── Dashboard.css
 │       │   ├── Login.css
 │       │   ├── Navbar.css
-        │   └── Task.css
+|       |   ├── App.css
+|       │   └── Task.css
 │       └── services/
 │
 ├── docs/
