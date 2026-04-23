@@ -1,5 +1,5 @@
 # sending fake requests to backend
-# and checking if the backend responds correctly
+# and checking if the backend responds correctly, make sure requirements.txt is downloaded
 # run in the root of the project: pytest to test
 import requests
 
