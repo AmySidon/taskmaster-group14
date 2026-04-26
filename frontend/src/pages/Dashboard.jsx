@@ -1,6 +1,7 @@
-import '../css/Dashboard.css'
+import '../css/Dashboard.css';
 import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
+import Sidebar from '../components/Sidebar';
 import TaskCard from '../components/TaskCard';
 import {
   fetchTasks,
@@ -9,7 +10,8 @@ import {
   updateTaskStatus,
   deleteTask,
   fetchProjects,
-  createProject
+  createProject,
+  deleteProject
 } from '../api';
 
 function Dashboard() {
@@ -56,17 +58,19 @@ function Dashboard() {
       setLoading(false);
     }
   }
-
   const handleAddProject = async () => {
-    if (!newProjectName.trim()) return;
+    const name = prompt("Enter course name:");
+
+    if (!name || !name.trim()) return;
 
     try {
-      const project = await createProject(newProjectName.trim());
-      setProjects((prev) => [...prev, project]);
-      setSelectedProjectId(project.id);
-      setNewProjectName('');
+      const newProject = await createProject(name.trim());
+
+      setProjects((prevProjects) => [...prevProjects, newProject]);
+      setSelectedProjectId(newProject.id);
     } catch (err) {
-      alert('Error creating project/course: ' + err.message);
+      console.error("Error creating course:", err);
+      alert("Could not save course.");
     }
   };
 
@@ -90,6 +94,26 @@ function Dashboard() {
     }
   };
 
+  const handleDeleteCourse = async (courseId) => {
+    try {
+      await deleteProject(courseId);
+
+      setProjects((prevProjects) =>
+        prevProjects.filter((project) => project.id !== courseId)
+      );
+
+      setTasks((prevTasks) =>
+        prevTasks.filter((task) => task.project_id !== courseId)
+      );
+
+      if (selectedProjectId === courseId) {
+        setSelectedProjectId(null);
+      }
+    } catch (err) {
+      console.error("Error deleting course:", err);
+      alert("Could not delete course.");
+    }
+  };
   const handleDeleteTask = async (taskId) => {
     try {
       await deleteTask(taskId);
@@ -150,16 +174,17 @@ function Dashboard() {
   const completedTasks = tasks.filter((task) => task.status === 'Completed').length;
   const inProgressTasks = tasks.filter((task) => task.status === 'In Progress').length;
   const overdueTasks = tasks.filter(
-    (task) => task.due_date && new Date(task.due_date) < new Date() && task.status !== 'Completed'
+    (task) =>
+      task.due_date &&
+      new Date(task.due_date) < new Date() &&
+      task.status !== 'Completed'
   ).length;
 
   if (loading) {
     return (
       <div className="dashboard-page">
         <Navbar />
-        <div className="dashboard-container">
-          <p>Loading...</p>
-        </div>
+        <p>Loading...</p>
       </div>
     );
   }
@@ -167,165 +192,138 @@ function Dashboard() {
   return (
     <div className="dashboard-page">
       <Navbar />
-
-      <div className="dashboard-container">
-        <div className="dashboard-header">
-          <div>
-            <h1>Dashboard</h1>
-            <p>Welcome back to TaskMaster</p>
-          </div>
-        </div>
-
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-
-        <div className="summary-cards">
-          <div className="summary-card">
-            <h3>Total Tasks</h3>
-            <p>{totalTasks}</p>
-          </div>
-
-          <div className="summary-card">
-            <h3>Completed</h3>
-            <p>{completedTasks}</p>
+      
+      <div className="dashboard-layout">
+        <Sidebar
+          courses={projects}
+          selectedCourseId={selectedProjectId}
+          onSelectCourse={setSelectedProjectId}
+          onAddCourse={handleAddProject}
+          onDeleteCourse={handleDeleteCourse}
+        />
+        
+        <div className="dashboard-container">
+          <div className="dashboard-header">
+            <div>
+              <h1>Dashboard</h1>
+              <p>Welcome back to TaskMaster</p>
+            </div>
           </div>
 
-          <div className="summary-card">
-            <h3>In Progress</h3>
-            <p>{inProgressTasks}</p>
+          {error && <p style={{ color: 'red' }}>{error}</p>}
+
+          <div className="summary-cards">
+            <div className="summary-card">
+              <h3>Total Tasks</h3>
+              <p>{totalTasks}</p>
+            </div>
+
+            <div className="summary-card">
+              <h3>Completed</h3>
+              <p>{completedTasks}</p>
+            </div>
+
+            <div className="summary-card">
+              <h3>In Progress</h3>
+              <p>{inProgressTasks}</p>
+            </div>
+
+            <div className="summary-card">
+              <h3>Overdue</h3>
+              <p>{overdueTasks}</p>
+            </div>
           </div>
 
-          <div className="summary-card">
-            <h3>Overdue</h3>
-            <p>{overdueTasks}</p>
-          </div>
-        </div>
+          <div className="task-section">
+            <h2>
+              {selectedProject
+                ? `${selectedProject.name} Tasks`
+                : 'No Course Selected'}
+            </h2>
+                
+            {selectedProject && (
+              <>
+                <div className="task-form">
+                  <input
+                    type="text"
+                    placeholder="Enter task"
+                    value={newTaskTitle}
+                    onChange={(e) => setNewTaskTitle(e.target.value)}
+                  />
 
-        <div className="course-section">
-          <h2>Courses / Projects</h2>
-
-          <div className="add-course">
-            <input
-              type="text"
-              placeholder="Enter course name"
-              value={newProjectName}
-              onChange={(e) => setNewProjectName(e.target.value)}
-            />
-            <button onClick={handleAddProject}>Add Course</button>
-          </div>
-
-          <div className="course-list">
-            {projects.length > 0 ? (
-              projects.map((project) => (
-                <div key={project.id} style={{ marginBottom: '10px' }}>
-                  <button
-                    onClick={() => setSelectedProjectId(project.id)}
-                    style={{
-                      fontWeight:
-                        selectedProjectId === project.id ? 'bold' : 'normal',
-                      marginRight: '10px'
-                    }}
+                  <select
+                    value={newTaskPriority}
+                    onChange={(e) => setNewTaskPriority(e.target.value)}
                   >
-                    {project.name}
-                  </button>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                  </select>
+
+                  <input
+                    type="date"
+                    value={newTaskDueDate}
+                    onChange={(e) => setNewTaskDueDate(e.target.value)}
+                  />
+
+                  <button onClick={handleAddTask}>Add Task</button>
                 </div>
-              ))
-            ) : (
-              <p>No courses/projects yet.</p>
+
+                <div className="search-filter">
+                  <input
+                    type="text"
+                    placeholder="Search tasks"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+
+                  <div style={{ marginTop: '10px' }}>
+                    <button onClick={() => setFilterStatus('All')}>All</button>
+                    <button onClick={() => setFilterStatus('Pending')}>Pending</button>
+                    <button onClick={() => setFilterStatus('In Progress')}>
+                      In Progress
+                    </button>
+                    <button onClick={() => setFilterStatus('Completed')}>
+                      Completed
+                    </button>
+                    <button onClick={() => setFilterStatus('Archived')}>
+                      Archived
+                    </button>
+                  </div>
+                </div>
+                <h2>Courses</h2>
+                
+                <div className="task-list">
+                  {filteredTasks.length > 0 ? (
+                    filteredTasks.map((task) => {
+                      const mappedTask = {
+                        ...task,
+                        dueDate: task.due_date,
+                        courseName: task.project_name
+                      };
+
+                      return (
+                        <TaskCard
+                          key={mappedTask.id}
+                          id={mappedTask.id}
+                          title={mappedTask.title}
+                          status={mappedTask.status}
+                          priority={mappedTask.priority}
+                          dueDate={mappedTask.dueDate}
+                          projectName={mappedTask.courseName}
+                          onDelete={handleDeleteTask}
+                          onStatusChange={handleStatusChange}
+                          onEdit={handleEditTask}
+                        />
+                      );
+                    })
+                  ) : (
+                    <p>No tasks found for this course.</p>
+                  )}
+                </div>
+              </>
             )}
           </div>
-        </div>
-
-        <div className="task-section">
-          <h2>
-            {selectedProject
-              ? `${selectedProject.name} Tasks`
-              : 'No Course Selected'}
-          </h2>
-
-          {selectedProject && (
-            <>
-              <div className="task-form">
-                <input
-                  type="text"
-                  placeholder="Enter task"
-                  value={newTaskTitle}
-                  onChange={(e) => setNewTaskTitle(e.target.value)}
-                />
-
-                <select
-                  value={newTaskPriority}
-                  onChange={(e) => setNewTaskPriority(e.target.value)}
-                >
-                  <option value="Low">Low</option>
-                  <option value="Medium">Medium</option>
-                  <option value="High">High</option>
-                </select>
-
-                <input
-                  type="date"
-                  value={newTaskDueDate}
-                  onChange={(e) => setNewTaskDueDate(e.target.value)}
-                />
-
-                <button onClick={handleAddTask}>Add Task</button>
-              </div>
-
-              <div className="search-filter">
-                <input
-                  type="text"
-                  placeholder="Search tasks"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-
-                <div style={{ marginTop: '10px' }}>
-                  <button onClick={() => setFilterStatus('All')}>All</button>
-                  <button onClick={() => setFilterStatus('Pending')}>
-                    Pending
-                  </button>
-                  <button onClick={() => setFilterStatus('In Progress')}>
-                    In Progress
-                  </button>
-                  <button onClick={() => setFilterStatus('Completed')}>
-                    Completed
-                  </button>
-                  <button onClick={() => setFilterStatus('Archived')}>
-                    Archived
-                  </button>
-                </div>
-              </div>
-
-              <div className="task-list">
-                {filteredTasks.length > 0 ? (
-                  filteredTasks.map((task) => {
-                    const mappedTask = {
-                      ...task,
-                      dueDate: task.due_date,
-                      courseId: task.project_id,
-                      courseName: task.project_name
-                    };
-
-                    return (
-                      <TaskCard
-                        key={mappedTask.id}
-                        id={mappedTask.id}
-                        title={mappedTask.title}
-                        status={mappedTask.status}
-                        priority={mappedTask.priority}
-                        dueDate={mappedTask.dueDate}
-                        projectName={mappedTask.courseName}
-                        onDelete={handleDeleteTask}
-                        onStatusChange={handleStatusChange}
-                        onEdit={handleEditTask}
-                      />
-                    );
-                  })
-                ) : (
-                  <p>No tasks found for this course.</p>
-                )}
-              </div>
-            </>
-          )}
         </div>
       </div>
     </div>

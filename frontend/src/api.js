@@ -108,3 +108,13 @@ export async function createProject(name) {
   if (!res.ok) throw new Error(data.error || 'Failed to create project')
   return data.project
 }
+export async function deleteProject(id) {
+  const res = await fetch(`${BASE_URL}/projects/${id}`, {
+    method: 'DELETE',
+    headers: authHeaders()
+  })
+
+  const data = await res.json()
+  if (!res.ok) throw new Error(data.error || 'Failed to delete project')
+  return data
+}
