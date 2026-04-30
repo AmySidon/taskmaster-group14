@@ -1,68 +1,205 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Sora:wght@600;700&display=swap');
+
 .sidebar {
-  width: 240px;
-  min-height: 100vh;
-  background: #1f2937;
-  color: white;
-  padding: 1.5rem;
-  box-sizing: border-box;
+  width: 230px;
+  min-width: 230px;
+  background: #ffffff;
+  border-right: 1px solid #e8eaf0;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1rem;
+  min-height: calc(100vh - 60px);
+  gap: 0.5rem;
+}
+
+.sidebar-header {
+  margin-bottom: 0.75rem;
+  padding: 0 0.25rem;
 }
 
 .sidebar-title {
-  margin-bottom: 1.5rem;
-  font-size: 1.5rem;
-}
-
-.add-course-btn {
-  width: 100%;
-  padding: 0.75rem;
-  border: none;
-  border-radius: 8px;
-  background: #3b82f6;
-  color: white;
-  cursor: pointer;
-  margin-bottom: 1rem;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
 }
 
 .course-list {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-}
-
-.course-item {
-  text-align: left;
-  padding: 0.75rem;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
-  color: white;
-  cursor: pointer;
-}
-
-.course-item:hover,
-.course-item.active {
-  background: #374151;
+  gap: 2px;
+  flex: 1;
 }
 
 .empty-courses {
-  color: #cbd5e1;
-  font-size: 0.9rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  padding: 0.5rem 0.5rem;
 }
+
 .course-item-wrapper {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: background 0.15s ease;
+}
+
+.course-item-wrapper:hover {
+  background: #f5f3ff;
+}
+
+.course-item-wrapper.active {
+  background: #ede9fe;
+}
+
+.course-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: none;
+  text-align: left;
+  padding: 0.55rem 0.6rem;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #374151;
+  border-radius: 8px;
+  transition: color 0.15s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.course-item-wrapper.active .course-item {
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+.course-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #c4b5fd;
+  flex-shrink: 0;
+}
+
+.course-item-wrapper.active .course-dot {
+  background: #4f46e5;
 }
 
 .delete-course-btn {
   opacity: 0;
-  border: none;
+  flex-shrink: 0;
   background: transparent;
-  color: #d33;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.1rem;
+  line-height: 1;
   cursor: pointer;
-  font-size: 18px;
+  padding: 0.3rem 0.5rem;
+  transition: opacity 0.15s ease, color 0.15s ease;
+  border-radius: 6px;
 }
 
 .course-item-wrapper:hover .delete-course-btn {
   opacity: 1;
+}
+
+.delete-course-btn:hover {
+  color: #ef4444;
+  background: #fef2f2;
+}
+
+/* Inline add course form */
+.course-add-inline {
+  padding: 0.5rem 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.course-name-input {
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  border: 1.5px solid #a5b4fc;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  color: #1e293b;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.course-name-input:focus {
+  border-color: #4f46e5;
+}
+
+.course-add-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.confirm-btn {
+  flex: 1;
+  padding: 0.35rem 0;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.confirm-btn:hover {
+  background: #4338ca;
+}
+
+.cancel-btn {
+  flex: 1;
+  padding: 0.35rem 0;
+  background: transparent;
+  color: #94a3b8;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 7px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.cancel-btn:hover {
+  border-color: #94a3b8;
+  color: #475569;
+}
+
+.add-course-btn {
+  margin-top: auto;
+  padding: 0.55rem 0.75rem;
+  background: transparent;
+  border: 1.5px dashed #c4b5fd;
+  border-radius: 8px;
+  color: #7c3aed;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.add-course-btn:hover {
+  background: #f5f3ff;
+  border-color: #7c3aed;
 }
