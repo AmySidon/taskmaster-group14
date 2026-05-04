@@ -1,5 +1,5 @@
 import '../css/Navbar.css'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 function Navbar() {
   const navigate = useNavigate()
@@ -11,14 +11,21 @@ function Navbar() {
   }
 
   const user = JSON.parse(localStorage.getItem('user') || '{}')
+  const initials = user.username ? user.username.slice(0, 2).toUpperCase() : '?'
 
   return (
     <nav className="navbar">
-      <h2 style={{ fontWeight: 'bold' }}>TaskMaster</h2>
-      <div className="nav-links">
-        {user.username && <span>Hi, {user.username}</span>}
-        <Link to="/dashboard">Dashboard</Link>
-        <button onClick={handleLogout} style={{ cursor: 'pointer' }}>Logout</button>
+      <span className="navbar-brand">TaskMaster</span>
+      <div className="nav-right">
+        {user.username && (
+          <div className="nav-user">
+            <div className="avatar">{initials}</div>
+            <span className="nav-username">{user.username}</span>
+          </div>
+        )}
+        <button className="logout-btn" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
     </nav>
   )

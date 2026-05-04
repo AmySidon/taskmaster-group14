@@ -1,107 +1,186 @@
-.task-card {
-  background: white;
-  padding: 16px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  border-left: 5px solid #4f46e5; /* later = priority color */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Sora:wght@600;700&display=swap');
 
+.task-card {
+  background: #ffffff;
+  border-left: 4px solid #4f46e5;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .task-card:hover {
-  transform: translateY(-3px);
-}
-.task-card {
-  transition: all 0.2s ease;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
 }
 
-.task-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-}
-.task-card button {
-  margin-top: 10px;
-}
 .task-card.completed {
   opacity: 0.6;
 }
-.task-card p {
-  margin: 5px 0;
+
+.task-card.overdue {
+  background: #fffbeb;
 }
 
-.task-card h3 {
-  color: #222;
-  font-size: 1.2rem;
-  margin-bottom: 8px;
-  word-break: break-word;
-}
-
-
-button:hover {
-  background: #4338ca;
-}
-
-.tasks-section h2 {
-  margin-bottom: 20px;
-  color: #1e293b;
-}
-
-.task-list {
-  display: grid;
-  gap: 20px;
-}
-
-.task-card {
-  background: white;
-  padding: 22px;
-  border-radius: 16px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-}
-
-.task-top {
+/* Title */
+.task-title-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 14px;
-  gap: 12px;
 }
 
-.task-top h3 {
+.task-title {
   margin: 0;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
   color: #1e293b;
-  font-size: 18px;
+  word-break: break-word;
+  line-height: 1.4;
 }
 
-.task-card p {
-  margin: 8px 0;
+.task-edit-input {
+  width: 100%;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+  border: 1.5px solid #a5b4fc;
+  border-radius: 7px;
+  padding: 0.3rem 0.5rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.task-edit-input:focus {
+  border-color: #4f46e5;
+}
+
+/* Meta badges */
+.task-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.badge {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.priority-badge {
+  /* color/bg set inline from PRIORITY_META */
+}
+
+.due-badge {
+  background: #f1f5f9;
   color: #475569;
 }
-.course-card {
-  position: relative;
-  padding: 10px 15px;
-  background: white;
-  border-radius: 8px;
-  margin-bottom: 10px;
+
+.due-overdue {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.course-badge {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+/* Status select */
+.task-status-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 
-/* hide button by default */
-.delete-course-btn {
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  background: transparent;
+.status-select {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
   border: none;
-  color: red;
-  font-size: 16px;
   cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 1.2rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2394a3b8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.4rem center;
+  transition: opacity 0.15s;
 }
 
-/* show on hover */
-.course-card:hover .delete-course-btn {
-  opacity: 1;
+.status-select:hover {
+  opacity: 0.85;
 }
-.delete-course-btn:hover {
-  color: darkred;
-  transform: scale(1.2);
+
+/* Actions */
+.task-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.task-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.3rem 0.75rem;
+  border-radius: 7px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.edit-btn {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.edit-btn:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.danger-btn {
+  background: #fef2f2;
+  color: #ef4444;
+}
+
+.danger-btn:hover {
+  background: #ef4444;
+  color: white;
+}
+
+.cancel-btn {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.cancel-btn:hover {
+  background: #e2e8f0;
+}
+
+.confirm-delete {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  color: #64748b;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-4px); }
+  to   { opacity: 1; transform: translateX(0); }
 }

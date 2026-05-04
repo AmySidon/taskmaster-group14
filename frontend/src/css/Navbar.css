@@ -1,48 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Sora:wght@600;700&display=swap');
+
 .navbar {
-  width: 100%;
-  background: white;
-  padding: 15px 30px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  padding: 0 2rem;
+  height: 60px;
+  background: #ffffff;
+  border-bottom: 1px solid #e8eaf0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 
-.navbar h2 {
-  margin: 0;
+.navbar-brand {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
   color: #4f46e5;
+  letter-spacing: -0.3px;
 }
 
-.nav-links {
+.nav-right {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 1rem;
 }
 
-.nav-links span {
-  color: #475569;
-  font-size: 14px;
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.nav-links a {
-  text-decoration: none;
-  color: #1e293b;
-  font-weight: 500;
-}
-
-.nav-links a:hover {
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ede9fe;
   color: #4f46e5;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.nav-links button {
-  background: #ef4444;
-  color: white;
-  border: none;
-  padding: 8px 14px;
+.nav-username {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.logout-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4rem 1rem;
   border-radius: 8px;
+  border: 1.5px solid #e2e8f0;
+  background: transparent;
+  color: #64748b;
   cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-.nav-links button:hover {
-  background: #dc2626;
+.logout-btn:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+  background: #fef2f2;
 }
